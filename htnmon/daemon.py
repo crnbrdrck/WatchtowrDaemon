@@ -9,13 +9,17 @@ authentication = FirebaseAuthentication(FIREBASE_SECRET, email, extra={'id': ID}
 firebase = FirebaseApplication(FIREBASE_URL,authentication)
 
 def startDaemon():
-    osVersionCommand = "lsb_release -a"
-    osVersion = subprocess.check_output(['bash','-c', osVersionCommand])
-    applicationCommand = "apt list"
-    applicationlist = subprocess.check_output(['bash','-c', applicationCommand]).split("\n")
-    applicationHash = {}
-    for i in applicationList:
-        tempList = i.split(" ")
-        applicationHash[tempList[0]] = tempList[1]
+    subprocess.call("./start.sh", shell=True)
+    with open('osVersion.txt', 'r') as f:
+        osVersion = f.readlines()
+    lines = [line.rstrip('\n') for line in open('applicationList.txt')]
+    print(lines[1].split(" "))
+    appHashTable = {}
+    for i in range(1,len(lines)):
+        tempLines = lines[i].split(" ")
+        appHashTable[tempLines[0]] = tempLines[1]
+
     
     update_server(osVersion,applicationHash)
+
+startDaemon()
