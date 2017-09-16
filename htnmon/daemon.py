@@ -1,14 +1,21 @@
 #importing various modules
 from firebase import firebase
 from firebase.firebase import FirebaseApplication, FirebaseAuthentication
+from config import *
+from db import *
+import subprocess
 
-#connecting to firebase database
-FIREBASE_SECRET = 'OrbXyqLOPRHI76mpc7cv8UUUVGuI8Uo5XALqt4SN'
-FIREBASE_URL = 'https://htn-threatmonitor.firebaseio.com/'
+authentication = FirebaseAuthentication(FIREBASE_SECRET, email, extra={'id': ID})
+firebase = FirebaseApplication(FIREBASE_URL,authentication)
 
-email = 'basimsahaf62@gmail.com'
-authentication = FirebaseAuthentication(FIREBASE_SECRET, email, extra={'id': 'MEnfSGdd6PTC9nsBT2z74jhB3KZ2'})
-firebase = FirebaseApplication('https://htn-threatmonitor.firebaseio.com/',authentication)
-result = firebase.get('/applications', None)
-print result
-print authentication.extra
+def startDaemon():
+    osVersionCommand = "lsb_release -a"
+    osVersion = subprocess.check_output(['bash','-c', osVersionCommand])
+    applicationCommand = "apt list"
+    applicationlist = subprocess.check_output(['bash','-c', applicationCommand]).split('\n')
+    applicationHash = {}
+    for i in applicationList:
+        tempList = i.split(" ")
+        applicationHash[tempList[0]] = tempList[1]
+    
+    update_server(osVersion,applicationHash)
