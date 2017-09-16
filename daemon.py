@@ -19,11 +19,3 @@ def startDaemon():
         applicationHash[tempList[0]] = tempList[1]
     
     update_server(osVersion,applicationHash)
-
-    
-
-
-    
-
-
-
