@@ -12,7 +12,7 @@ def startDaemon():
     osVersionCommand = "lsb_release -a"
     osVersion = subprocess.check_output(['bash','-c', osVersionCommand])
     applicationCommand = "apt list"
-    applicationlist = subprocess.check_output(['bash','-c', applicationCommand]).split('\n')
+    applicationlist = subprocess.check_output(['bash','-c', applicationCommand]).split("\n")
     applicationHash = {}
     for i in applicationList:
         tempList = i.split(" ")
