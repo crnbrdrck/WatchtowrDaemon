@@ -1,4 +1,3 @@
 lsb_release -a -> Ubuntu Version
-
 apt list -> xargs --version -> output
 
