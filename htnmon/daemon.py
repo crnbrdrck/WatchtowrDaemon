@@ -20,6 +20,6 @@ def startDaemon():
         appHashTable[tempLines[0]] = tempLines[1]
 
     
-    update_server(osVersion,applicationHash)
+    update_server(osVersion,appHashTable)
 
 startDaemon()
