@@ -1,6 +1,6 @@
 from firebase.firebase import FirebaseApplication
 
-from htnmon.config import *
+from .config import *
 
 firebase = FirebaseApplication(FIREBASE_URL, None)
 
@@ -19,8 +19,9 @@ def register_server(user_id, server_name):
     key = 'servers/'
     result = firebase.post(key, {'name': server_name, 'user_id': user_id})
     # Write the server id to the config file
-    with open('config.py', 'a') as filehandle:
+    with open('htnmon/config.py', 'a') as filehandle:
         filehandle.write('\n')
         filehandle.write('SERVER_ID = "')
         filehandle.write(result['name'])
         filehandle.write('"\n')
+    return result['name']

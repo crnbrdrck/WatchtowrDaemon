@@ -14,27 +14,32 @@ class PostInstall(install):
         server_name = environ.get('HTN_SERVER_NAME', None)
         if server_name is None:
             raise Exception('HTN_SERVER_NAME must be set')
-        register_server(user_id, server_name)
+        print('Server ID', register_server(user_id, server_name))
+        # Move the sh script to the /bin folder
+        with open('htnmon/start.sh') as infile:
+            with open('/bin/appList', 'w') as outfile:
+                outfile.write(infile.read())
+        system('chmod +x /bin/appList')
         # Register this script as a service
         data = """[Unit]
-Description=Service developed at Hack The North using Google's Firebase and eSentire's Cymon systems.
+Description=Threat monitoring service developed at Hack The North 2017  using Google's Firebase and eSentire's Cymon systems.
 
 [Service]
-ExecStart=/bin/bash -c "while true; do /usr/bin/env python3 -m htnmon; sleep 30m; done;"
+ExecStart=/bin/bash -c "while true; do /usr/bin/python3 -c 'from htnmon import daemon; daemon.startDaemon()'; sleep 30m; done;"
 
 [Install]
 WantedBy=multi-user.target
         """
-        with open('/etc/systemd/system/htn.service', 'w') as filehandle:
+        with open('/etc/systemd/system/htnmon.service', 'w') as filehandle:
             filehandle.write(data)
         # Set up daemon to run
-        system('systemctl daemon-reload; systemctl enable htn; systemctl start htn')
+        system('systemctl daemon-reload; systemctl enable htnmon; systemctl start htnmon')
         # Super
         install.run(self)
 
 
 setup(
-    name='HTNThreatMonitor',
+    name='htnmon',
     version='0.1dev',
     packages=['htnmon'],
     license='',
