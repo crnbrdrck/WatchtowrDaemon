@@ -2,6 +2,7 @@
 from firebase.firebase import FirebaseApplication, FirebaseAuthentication
 from .config import *
 from .db import *
+import re
 import subprocess
 from sys import stderr
 
@@ -20,7 +21,7 @@ def startDaemon():
     appHashTable = {}
     for i in range(1,len(lines)):
         tempLines = lines[i].split(" ")
-        appHashTable[tempLines[0].split('/')[0]] = tempLines[1]
+        appHashTable[re.sub('[\.\$\[\]\#\/]', ' ', tempLines[0])] = re.sub('[\.\$\[\]\#\/]', ' ', tempLines[1])
     print('Generated appTable. Sending data to server', file=stderr)
     update_server(osVersion,appHashTable)
     print('Success. Sleeping', file=stderr)
