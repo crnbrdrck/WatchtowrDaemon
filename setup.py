@@ -25,7 +25,7 @@ class PostInstall(install):
 Description=Threat monitoring service developed at Hack The North 2017  using Google's Firebase and eSentire's Cymon systems.
 
 [Service]
-ExecStart=/bin/bash -c "while true; do /usr/bin/python3 -c 'from watchtowr import daemon; daemon.startDaemon()'; sleep 30m; done;"
+ExecStart=/bin/bash -c "i=0; while true; do /usr/bin/python3 -c 'from watchtowr import daemon; daemon.startDaemon($i)'; sleep 5m; done;"
 
 [Install]
 WantedBy=multi-user.target
@@ -40,7 +40,7 @@ WantedBy=multi-user.target
 
 setup(
     name='watchtowr',
-    version='0.1dev',
+    version='0.2',
     packages=['watchtowr'],
     license='',
     url='wat.ch/towr',
