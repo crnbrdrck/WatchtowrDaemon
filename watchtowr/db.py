@@ -13,7 +13,8 @@ def update_server(os_version, applications):
     key = 'servers/' + server_id
     firebase.put(key, 'os_version', os_version)
     firebase.delete(key, 'applications')
-    firebase.post(key + '/applications', [{application: applications[application]} for application in applications])
+    for application in applications:
+        firebase.post(key + '/applications', {application: applications[application]})
 
 
 def register_server(user_id, server_name):
