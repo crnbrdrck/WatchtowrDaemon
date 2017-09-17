@@ -17,7 +17,7 @@ class PostInstall(install):
         register_server(user_id, server_name)
         # Register this script as a service
         data = """[Unit]
-Description=Service developed at Hack The North using Google's Firebase and eSentire's Cymon systems.
+Description= Service developed at Hack The North using Google's Firebase and eSentire's Cymon systems.
 
 [Service]
 ExecStart=/bin/bash -c "while true; do /usr/bin/env python3 -m htnmon; sleep 30m; done;"
