@@ -19,14 +19,15 @@ def check_commands():
     # firebase.delete('commands', SERVER_ID)
     # Run through each of the commands and run them in a subprocess
     for command in commands:
-        p = subprocess.Popen(split(command['cmd']), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
-        firebase.update('commands', command['name'], {
-            'stdout': stdout.decode(),
-            'stderr': stderr.decode(),
-            'exit_code': p.returncode,
-            'run_time': datetime.now().strftime('%H:%M:%S %d/%m/%y')
-        })
+        if not command['run_time']:
+            p = subprocess.Popen(split(command['cmd']), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = p.communicate()
+            firebase.update('commands', command['name'], {
+                'stdout': stdout.decode(),
+                'stderr': stderr.decode(),
+                'exit_code': p.returncode,
+                'run_time': datetime.now().strftime('%H:%M:%S %d/%m/%y')
+            })
 
 
 def startDaemon(service_calls):
