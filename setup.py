@@ -16,7 +16,7 @@ class PostInstall(install):
             raise Exception('HTN_SERVER_NAME must be set')
         print('Server ID', register_server(user_id, server_name))
         # Move the sh script to the /bin folder
-        with open('watchtowr/start.sh') as infile:
+        with open('./watchtowr/start.sh') as infile:
             with open('/bin/appList', 'w') as outfile:
                 outfile.write(infile.read())
         system('chmod +x /bin/appList')

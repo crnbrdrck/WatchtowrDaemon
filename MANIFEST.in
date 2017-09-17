@@ -1,2 +1,2 @@
-recursive-include htnmon/*
-include README.txt htnmon/start.sh
+recursive-include watchtowr/*
+include README.txt watchtowr/start.sh

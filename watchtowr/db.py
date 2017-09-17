@@ -20,14 +20,10 @@ def register_server(user_id, server_name):
     key = 'servers/'
     data = {'name': server_name, 'user_id': user_id}
     # Get the ip and lat-long position
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip = s.getsockname()[0]
-    data['ip'] = ip
-    s.close()
     # Do an ipapi lookup
-    response = requests.get('https://ipapi.co/%s/json/' % ip)
-    data['location'] = (response.json()['latitude'], response.json()['longitude'])
+    response = requests.get('https://ipapi.co/json/')
+    data['ip'] = response.json()['ip']
+    data['location'] = {'lat': response.json()['latitude'], 'long': response.json()['longitude']}
     result = firebase.post(
         key, data)
     # Write the server id to the config file
