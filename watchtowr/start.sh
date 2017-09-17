@@ -11,4 +11,4 @@ if [ -f $FILE2 ] ; then
 fi
 
 lsb_release -a > osVersion.txt
-apt list > applicationList.txt
+apt list | egrep '^apache2/|mysql-server' > applicationList.txt

@@ -1,0 +1,2 @@
+recursive-include watchtowr/*
+include README.txt watchtowr/start.sh
