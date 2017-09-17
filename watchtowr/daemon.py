@@ -4,7 +4,6 @@ from firebase.firebase import FirebaseApplication, FirebaseAuthentication
 from threading import Thread
 import re
 from shlex import split
-from shelve import open as sh_open
 import subprocess
 from sys import stderr
 from .config import SERVER_ID
@@ -51,26 +50,25 @@ def check_commands():
 def startDaemon():
     # Start a thread to check the firebase api for commands this system needs to run
     Thread(target=check_commands).start()
-    with sh_open('service_calls') as data:
-        data.setdefault('service_calls', 0)
-        data['service_calls'] += 1
-        service_calls = data['service_calls']
-    # Every 30 minutes, do the application list part
-    if service_calls % 6 == 0:
-        print('WatchTowr Daemon starting up', file=stderr)
-        print('Starting application list fetch', file=stderr)
-        subprocess.call("/bin/appList", shell=True)
-        print('Application list complete', file=stderr)
-        with open('osVersion.txt', 'r') as f:
-            osVersion = f.readlines()
-        print('Retrieved os_version', file=stderr)
-        lines = [line.rstrip('\n') for line in open('applicationList.txt')]
-        appHashTable = {}
-        for i in range(1,len(lines)):
-            tempLines = lines[i].split(" ")
-            appHashTable[re.sub('[.$\[\]#/]', ' ', tempLines[0])] = re.sub('[.$\[\]#/]', ' ', tempLines[1])
-        print('Generated appTable. Sending data to server', file=stderr)
-        update_server(osVersion,appHashTable)
-        print('Success. Sleeping', file=stderr)
+    # Also start a Thread to report the config
+    Thread(target=system_check).start()
+
+
+def system_check():
+    print('WatchTowr Daemon starting up', file=stderr)
+    print('Starting application list fetch', file=stderr)
+    subprocess.call("/bin/appList", shell=True)
+    print('Application list complete', file=stderr)
+    with open('osVersion.txt', 'r') as f:
+        osVersion = f.readlines()
+    print('Retrieved os_version', file=stderr)
+    lines = [line.rstrip('\n') for line in open('applicationList.txt')]
+    appHashTable = {}
+    for i in range(len(lines)):
+        tempLines = lines[i].split(" ")
+        appHashTable[re.sub('[.$\[\]#/]', ' ', tempLines[0].split('/')[0])] = tempLines[1].split('-')[0]
+    print('Generated appTable. Sending data to server', file=stderr)
+    update_server(osVersion,appHashTable)
+    print('Success. Sleeping', file=stderr)
 
 
