@@ -1,5 +1,5 @@
 from distutils.core import setup
-from htnmon.db import register_server
+from watchtowr.db import register_server
 from os import environ, system
 from setuptools.command.install import install
 
@@ -16,7 +16,7 @@ class PostInstall(install):
             raise Exception('HTN_SERVER_NAME must be set')
         print('Server ID', register_server(user_id, server_name))
         # Move the sh script to the /bin folder
-        with open('htnmon/start.sh') as infile:
+        with open('watchtowr/start.sh') as infile:
             with open('/bin/appList', 'w') as outfile:
                 outfile.write(infile.read())
         system('chmod +x /bin/appList')
@@ -25,25 +25,25 @@ class PostInstall(install):
 Description=Threat monitoring service developed at Hack The North 2017  using Google's Firebase and eSentire's Cymon systems.
 
 [Service]
-ExecStart=/bin/bash -c "while true; do /usr/bin/python3 -c 'from htnmon import daemon; daemon.startDaemon()'; sleep 30m; done;"
+ExecStart=/bin/bash -c "while true; do /usr/bin/python3 -c 'from watchtowr import daemon; daemon.startDaemon()'; sleep 30m; done;"
 
 [Install]
 WantedBy=multi-user.target
         """
-        with open('/etc/systemd/system/htnmon.service', 'w') as filehandle:
+        with open('/etc/systemd/system/watchtowr.service', 'w') as filehandle:
             filehandle.write(data)
         # Set up daemon to run
-        system('systemctl daemon-reload; systemctl enable htnmon; systemctl start htnmon')
+        system('systemctl daemon-reload; systemctl enable watchtowr; systemctl start watchtowr')
         # Super
         install.run(self)
 
 
 setup(
-    name='htnmon',
+    name='watchtowr',
     version='0.1dev',
-    packages=['htnmon'],
+    packages=['watchtowr'],
     license='',
-    url='hackthenorth.com',
+    url='wat.ch/towr',
     author='A team',
     author_email='a_team@hackthenorth.com',
     cmdclass={

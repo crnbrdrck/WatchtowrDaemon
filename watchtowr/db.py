@@ -1,5 +1,6 @@
 from firebase.firebase import FirebaseApplication
-
+import requests
+import socket
 from .config import *
 
 firebase = FirebaseApplication(FIREBASE_URL, None)
@@ -17,9 +18,20 @@ def update_server(os_version, applications):
 
 def register_server(user_id, server_name):
     key = 'servers/'
-    result = firebase.post(key, {'name': server_name, 'user_id': user_id})
+    data = {'name': server_name, 'user_id': user_id}
+    # Get the ip and lat-long position
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    data['ip'] = ip
+    s.close()
+    # Do an ipapi lookup
+    response = requests.get('https://ipapi.co/%s/json/' % ip)
+    data['location'] = (response.json()['latitude'], response.json()['longitude'])
+    result = firebase.post(
+        key, data)
     # Write the server id to the config file
-    with open('htnmon/config.py', 'a') as filehandle:
+    with open('watchtowr/config.py', 'a') as filehandle:
         filehandle.write('\n')
         filehandle.write('SERVER_ID = "')
         filehandle.write(result['name'])
