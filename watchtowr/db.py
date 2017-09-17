@@ -32,5 +32,9 @@ def register_server(user_id, server_name):
         filehandle.write('\n')
         filehandle.write('SERVER_ID = "')
         filehandle.write(result['name'])
+<<<<<<< HEAD:htnmon/db.py
+        filehandle.write('\n')
+=======
         filehandle.write('"\n')
     return result['name']
+>>>>>>> 03f29ebe3edfcb0968f3bc4225825007a1542bdf:watchtowr/db.py
